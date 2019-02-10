@@ -1,0 +1,116 @@
+﻿@model Camera.Shop.Models.Pedidos
+@using Camera.Shop.Models
+
+@{
+    string RutaImagenes = "/Content/Images";
+    Layout = "~/Views/Shared/_LayoutUsuario.cshtml";
+    ViewBag.Title = "Mi carrito";
+}
+
+<main class="container-fluid my-5">
+    <h3 class="my-3"><i class="fa fa-shopping-cart"></i> @ViewBag.Title</h3>
+    @if (Model == null || Model.Detalles_Pedido.Count < 1)
+    {
+        <hr />
+        <div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i> Todavía no ha añadido productos al carrito de la compra.</div>
+    }
+    else
+    {
+        decimal TotalCompraConIVA = 0;
+        <div class="row">
+            <div class="col-lg-9 col-md-9 col-sm-7">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="text-center" width="7%"><i class="fa fa-image"></i></th>
+                                <th width="43%">Producto</th>
+                                <th class="text-center" width="10%">Unidades</th>
+                                <th width="17%">Precio unitario (IVA incl.)</th>
+                                <th width="18%">Precio (IVA incl.)</th>
+                                <th class="text-center" width="5%"><i class="fa fa-cog"></i></th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <td colspan="6" class="text-right">
+                                    @Html.ActionLink("Vaciar el carrito", "Vaciar", "Carrito", null, new { @class = "btn btn-danger btn-lock", onclick = "return confirm('¿Está seguro que desea vaciar el pedido?')" })
+                                </td>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            @{
+                                int DetalleIndex = 0;
+                            }
+                            @foreach (Detalles_Pedido Detalle in Model.Detalles_Pedido)
+                            {
+                                <tr>
+                                    <td class="text-center">
+                                        @{
+                                            string RutaImagen = RutaImagenes + "/Productos/" + Detalle.Productos.Imagen;
+                                        }
+                                        @if (File.Exists(Server.MapPath("~" + RutaImagen)))
+                                        {
+                                            <a href="@RutaImagen" title="@Detalle.Productos.Nombre" class="fancybox">
+                                                <img src="@RutaImagen" alt="@Detalle.Productos.Nombre" class="rounded border" height="75" />
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <img src="@RutaImagenes/no_disponible.svg" alt="Imagen no disponible" height="75" />
+                                        }
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink(Detalle.Productos.Nombre, "Details", "Productos", new { Id = Detalle.Productos.Id }, new { @class = "h5 font-weight-bold" })
+                                        <p>
+                                            @if (Detalle.Productos.Descripcion.Count() < 110)
+                                            {
+                                                @Detalle.Productos.Descripcion;
+                                            }
+                                            else
+                                            {
+                                                @(Detalle.Productos.Descripcion.Substring(0, 110) + "...")
+                                            }
+                                        </p>
+                                    </td>
+                                    <td class="text-center">
+                                        @if (Detalle.Unidades > 1)
+                                        {
+                                            @Html.ActionLink(" ", "QuitarUnidad", "DetallesPedido", new { id = Detalle.Id }, new { @class = "fa fa-minus btn btn-sm btn-danger" })
+                                        }
+                                        <span class="mx-1">@Detalle.Unidades</span>
+                                        @Html.ActionLink(" ", "SumarUnidad", "DetallesPedido", new { id = Detalle.Id }, new { @class = "fa fa-plus btn btn-sm btn-success" })
+                                    </td>
+                                    @{
+                                        decimal PrecioUnitarioConIva = Detalle.Precio_Unitario + (Detalle.Precio_Unitario * Detalle.IVA / 100);
+                                        decimal TotalConIVA = PrecioUnitarioConIva * Detalle.Unidades;
+                                        TotalCompraConIVA += TotalConIVA;
+                                    }
+                                    <td>@string.Format("{0:C}", PrecioUnitarioConIva)</td>
+                                    <td class="h5 font-weight-bold">@string.Format("{0:C}", TotalConIVA)</td>
+                                    <td class="text-center">
+                                        @Html.ActionLink(" ", "Delete", "DetallesPedido", new { id = Detalle.Id }, new { @class = "fa fa-trash btn btn-danger", onclick = "return confirm('¿Está seguro que desea eliminar este detalle del pedido?')" })
+                                    </td>
+                                </tr>
+                                DetalleIndex++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-5">
+                <div class="card shadow-lg">
+                    <div class="card-header"><i class="fa fa-list"></i> Resumen del pedido</div>
+                    <div class="card-body">
+                        <h6 class="mb-0">Total (IVA incl.)</h6>
+                        <h2 class="mb-0">@string.Format("{0:C}", TotalCompraConIVA)</h2>
+                    </div>
+                    <div class="card-footer">
+                        @Html.ActionLink("Confirmar el pedido", "Confirmar", "Pedidos", null, new { @class = "btn btn-block btn-lg btn-success", onclick = "return confirm('¿Está seguro que desea confirmar el pedido?')" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    }
+</main>

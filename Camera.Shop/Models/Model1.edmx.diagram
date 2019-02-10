@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="2057da6f33704e889299ac04d723061d" Name="Diagram1">
+        <EntityTypeShape EntityType="CameraShopModel.Categorias" Width="1.5" PointX="0.75" PointY="8.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="CameraShopModel.Clientes" Width="1.5" PointX="0.75" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="CameraShopModel.Detalles_Pedido" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="CameraShopModel.Estados_Pedido" Width="1.5" PointX="0.75" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="CameraShopModel.Pedidos" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="CameraShopModel.Productos" Width="1.5" PointX="3" PointY="8.125" IsExpanded="true" />
+        <AssociationConnector Association="CameraShopModel.FK_ID_CATEGORIA_PRODUCTOS" ManuallyRouted="false" />
+        <AssociationConnector Association="CameraShopModel.FK_ID_CLIENTE_PEDIDO" ManuallyRouted="false" />
+        <AssociationConnector Association="CameraShopModel.FK_ID_PEDIDO_DETALLES" ManuallyRouted="false" />
+        <AssociationConnector Association="CameraShopModel.FK_ID_PRODUCTO_DETALLES" ManuallyRouted="false" />
+        <AssociationConnector Association="CameraShopModel.FK_ID_ESTADO_PEDIDO" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,121 @@
+﻿@model PagedList.IPagedList<Camera.Shop.Models.Productos>
+@using PagedList.Mvc;
+@using Camera.Shop.Models
+
+@{
+    string RutaVistas = "~/Views/Shared";
+    string RutaImagenes = "/Content/Images";
+    if (User.Identity.IsAuthenticated)
+    {
+        if (User.IsInRole("Administrador"))
+        {
+            Layout = RutaVistas + "/_LayoutAdministrador.cshtml";
+        }
+        else
+        {
+            Layout = RutaVistas + "/_LayoutUsuario.cshtml";
+        }
+    }
+    else
+    {
+        Layout = RutaVistas + "/_Layout.cshtml";
+    }
+    ViewBag.Title = "Productos";
+    Categorias CategoriaActual = ViewBag.CategoriaActual;
+    List<Categorias> ListaCategorias = ViewBag.Categorias;
+}
+
+<main class="container-fluid my-5">
+    <h2><i class="fa fa-shopping-cart"></i> @ViewBag.Title</h2>
+    @if(User.Identity.IsAuthenticated && User.IsInRole("Administrador"))
+    {
+        <hr />
+        @Html.ActionLink("Crear producto", "Create", "Productos", null, new { @class = "btn btn-sm btn-dark" })
+    }
+    <hr />
+    <div class="row mt-4">
+        <div class="col-12 col-md-4 col-xl-2">
+            <h5><i class="fa fa-tags"></i> Categorías</h5>
+            <div class="list-group mt-3">
+                @foreach (Categorias Categoria in ListaCategorias)
+                {
+                    @Html.ActionLink(Categoria.Nombre, "Index", "Productos", new { IdCategoria = Categoria.Id }, new { @class = "list-group-item list-group-item-action py-2 px-3" + (Categoria.Id == CategoriaActual.Id ? " active" : null) })
+                }
+            </div>
+        </div>
+        <div class="col-12 mt-4 mt-md-0 col-md-8 col-xl-10">
+            <div class="row bg-light rounded p-3 mb-4">
+                <h4 class="mb-0 col-7"><i class="fa fa-tag"></i> @CategoriaActual.Nombre</h4>
+                <div class="col-5">
+                    @using (Html.BeginForm("Index", "Productos", null, FormMethod.Get, new { @class = "form-inline" }))
+                    {
+                        @Html.Hidden("IdCategoria", CategoriaActual.Id)
+                        @Html.Hidden("Page", Model.PageNumber)
+                        <div class="form-group ml-auto">
+                            @Html.Label("Búsqueda:", new { @for = "Busqueda" })
+                            @Html.TextBox("Busqueda", null, new { @class = "form-control mx-2" })
+                            <button type="submit" class="btn btn-dark"><i class="fa fa-search"></i> Buscar</button>
+                        </div>
+                    }
+                </div>
+            </div>
+            @if (Model.Count<Productos>() > 0)
+            {
+                <div class="row">
+                    @foreach (Productos Producto in Model)
+                    {
+                        <div class="col-md-6 col-lg-4 col-xl-2">
+                            <div class="card Producto mb-4 box-shadow shadow-sm">
+                                @{
+                                    string RutaImagen = RutaImagenes + "/Productos/" + Producto.Imagen;
+                                }
+                                @if (File.Exists(Server.MapPath("~" + RutaImagen)))
+                                {
+                                    <a href="@RutaImagen" title="@Producto.Nombre" class="Imagen fancybox" style="background-image: url(@RutaImagen);"></a>
+                                }
+                                else
+                                {
+                                    <div class="Imagen" style="background-image: url(@RutaImagenes/no_disponible.svg);"></div>
+                                }
+                                <div class="card-body">
+                                    <div class="card-text">
+                                        <h4 class="Titulo mb-2">@Html.ActionLink(Producto.Nombre, "Details", "Productos", new { Id = Producto.Id }, null)</h4>
+                                        <p class="Descripcion">@Producto.Descripcion</p>
+                                        <h4 class="mb-3">@(string.Format("{0:C}", Producto.Precio_Unitario + (Producto.Precio_Unitario * Producto.IVA / 100))) <span class="h6">(IVA incl.)</span></h4>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="btn-group ml-auto">
+                                            @Html.ActionLink("Detalles", "Details", "Productos", new { Id = Producto.Id }, new { @class = "btn btn-sm btn-outline-secondary" })
+                                            @if (Request.IsAuthenticated && User.IsInRole("Administrador"))
+                                            {
+                                                @Html.ActionLink("Editar", "Edit", "Productos", new { Id = Producto.Id }, new { @class = "btn btn-sm btn-outline-secondary" })
+                                                if (Producto.Detalles_Pedido.Count() < 1)
+                                                {
+                                                    @Html.ActionLink("Eliminar", "Delete", "Productos", new { Id = Producto.Id }, new { onclick = "return confirm('¿Seguro que desea eliminar el producto?')", @class = "btn btn-sm btn-outline-danger" })
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                                    }
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p>Página @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount</p>
+                        @Html.PagedListPager(Model, Page => Url.Action("Index", new { IdCategoria = Convert.ToString(CategoriaActual.Id), Page }), new PagedListRenderOptions { LiElementClasses = new string[] { "page-item" } })
+                    </div>
+                </div>
+                                    }
+                                    else
+                                    {
+                <div class="row">
+                    <div class="col">
+                        <div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i> No hay productos disponibles para la categoría "<b>@CategoriaActual.Nombre</b>" o la búsqueda devuelto resultados.</div>
+                    </div>
+                </div>
+                                        }
+        </div>
+    </div>
+</main>

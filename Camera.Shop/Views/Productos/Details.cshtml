@@ -1,0 +1,108 @@
+﻿@model Camera.Shop.Models.Productos
+@using Camera.Shop.Models
+
+@{
+    string RutaVistas = "~/Views/Shared";
+    string RutaImagenes = "/Content/Images";
+    if (User.Identity.IsAuthenticated)
+    {
+        if (User.IsInRole("Administrador"))
+        {
+            Layout = RutaVistas + "/_LayoutAdministrador.cshtml";
+        }
+        else
+        {
+            Layout = RutaVistas + "/_LayoutUsuario.cshtml";
+        }
+    }
+    else
+    {
+        Layout = RutaVistas + "/_Layout.cshtml";
+    }
+    ViewBag.Title = "Detalles";
+}
+<main class="container my-5">
+    <div class="card p-3">
+        <div class="row">
+            <div class="col-sm-5 border-right p-3 text-center">
+                @{
+                    string RutaImagen = RutaImagenes + "/Productos/" + Model.Imagen;
+                }
+                @if (File.Exists(Server.MapPath("~" + RutaImagen)))
+                {
+                    <a href="@RutaImagen" title="@Model.Nombre" class="fancybox">
+                        <img src="@RutaImagen" alt="@Model.Nombre" class="img-fluid rounded" />
+                    </a>
+                }
+                else
+                {
+                    <img src="@RutaImagenes/no_disponible.svg" alt="Imagen no disponible" class="img-fluid" />
+                }
+            </div>
+            <div class="col-sm-7 card-body">
+                <h3 class="mb-3">@Model.Nombre</h3>
+                <dl class="item-property">
+                    <dt>Descripción:</dt>
+                    <dd>
+                        <p>@Model.Descripcion</p>
+                    </dd>
+                    <dt><i class="fa fa-tag"></i> Categoría</dt>
+                    <dd>
+                        <ul>
+                            <li>@Html.ActionLink(Model.Categorias.Nombre, "Index", "Productos", new { IdCategoria = Model.Categorias.Id }, null)</li>
+                        </ul>
+                    </dd>
+                    <dt>Unidades disponibles</dt>
+                    <dd>@Model.Catalogo</dd>
+                    <dt>IVA</dt>
+                    <dd>@Model.IVA %</dd>
+                    <dt>Precio unitario <u>sin IVA</u></dt>
+                    <dd>@Html.DisplayFor(Model => Model.Precio_Unitario)</dd>
+                    <dt>Precio unitario <u>con IVA</u></dt>
+                    <dd class="h3">@(string.Format("{0:C}", Model.Precio_Unitario + (Model.Precio_Unitario * Model.IVA / 100)))</dd>
+                </dl>
+                <hr />
+                @if (User.Identity.IsAuthenticated)
+                {
+                    if (User.IsInRole("Administrador"))
+                    {
+                    <div class="btn-group">
+                        @Html.ActionLink("Editar", "Edit", "Productos", new { Id = Model.Id }, new { @class = "btn btn-outline-secondary" })
+                        @if (Model.Detalles_Pedido.Count() < 1)
+                        {
+                        @Html.ActionLink("Eliminar", "Delete", "Productos", new { Id = Model.Id }, new { onclick = "return confirm('¿Seguro que desea eliminar el producto?')", @class = "btn btn-outline-danger" })
+                        }
+                    </div>
+                    }
+                    else
+                    {
+                        if (Model.Catalogo > 0)
+                        {
+                            using (Html.BeginForm("Anadir", "Carrito", FormMethod.Post, new { role = "form", @class = "form-inline" }))
+                            {
+                                @Html.Hidden("Id", Model.Id)
+                                <div class="form-group">
+                                    @Html.Label("Unidades", "Unidades:", new { @class = "control-label mr-2" })
+                                    @Html.TextBox("Unidades", 1, new { @class = "form-control mr-2", type = "number", min = 1, step = 1, autofocus = "autofocus" })
+                                </div>
+                                <button type="submit" class="btn btn-dark"><i class="fa fa-plus-circle"></i> Añadir al carrito</button>
+                            }
+                        }
+                        else
+                        {
+                            <div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-triangle"></i> No disponemos de unidades para este producto.</div>
+                        }
+                    }
+                }
+                else
+                {
+                    <div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-triangle"></i> Para añadir un producto a su carrito debe @Html.ActionLink("registrarse", "Register", "Account") o @Html.ActionLink("iniciar sesión", "Login", "Account").</div>
+                }
+            </div>
+        </div>
+    </div>
+    <br />
+    <p>
+        <a href="javascript:window.history.go(-1);" class="text-dark"><i class="fa fa-arrow-left"></i> Volver</a>
+    </p>
+</main>

@@ -1,0 +1,83 @@
+﻿@model PagedList.IPagedList<Camera.Shop.Models.Clientes>
+@using PagedList.Mvc;
+@using Camera.Shop.Models
+
+@{
+    Layout = "~/Views/Shared/_LayoutAdministrador.cshtml";
+    ViewBag.Title = "Clientes";
+    List<ClienteRanking> RankingClientesGasto = ViewBag.RankingClientesGasto;
+}
+
+<main class="container-fluid my-5">
+    <h2 class="mb-4"><i class="fa fa-users"></i> @ViewBag.Title</h2>
+    @if (Model.Count<Clientes>() > 0)
+    {
+        <div class="table-responsive">
+            <table class="table">
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Fecha de nacimiento</th>
+                    <th>Teléfono</th>
+                    <th>Dirección</th>
+                    <th>País</th>
+                    <th>Pedidos</th>
+                    <th><i class="fa fa-cog"></i></th>
+                </tr>
+                @foreach (Clientes Cliente in Model)
+                {
+                    <tr>
+                        <td>@Cliente.Id</td>
+                        <td>@Cliente.Nombre</td>
+                        <td>@Cliente.Email</td>
+                        <td>@Cliente.Fecha_Nacimineto.ToShortDateString()</td>
+                        <td>@Cliente.Telefono</td>
+                        <td>@Cliente.Direccion</td>
+                        <td>@Cliente.Pais</td>
+                        <td>@Cliente.Pedidos.Count()</td>
+                        <td>
+                            <div class="btn-group">
+                                @Html.ActionLink("Detalles", "Details", new { id = Cliente.Id }, new { @class = "btn btn-sm btn-outline-dark" })
+                                @Html.ActionLink("Editar", "Edit", new { id = Cliente.Id }, new { @class = "btn btn-sm btn-outline-dark" })
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+        <p>Página @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount</p>
+        @Html.PagedListPager(Model, Page => Url.Action("Index", new { Page }), new PagedListRenderOptions { LiElementClasses = new string[] { "page-item" } })
+        <div id="ranking" class="border-top bg-light p-4">
+            <h5><i class="fa fa-star"></i> <b>Top 4</b> clientes que más han gastado:</h5>
+            <div class="row">
+                @if (RankingClientesGasto.Count() > 0)
+                {
+                    for (int i = 0; i < RankingClientesGasto.Count(); i++)
+                    {
+                        ClienteRanking Cliente = RankingClientesGasto[i];
+                        <div class="col-12 p-3 col-lg-3">
+                            <div class="bg-info text-white rounded text-right p-3">
+                                <p class="badge badge-light mb-0">Posición #@(i + 1)</p>
+                                <h3 class="mb-0"><i class="fa fa-user"></i> @Cliente.Nombre</h3>
+                                <h5>@string.Format("{0:C}", Cliente.Gastado) gastados</h5>
+                                <div class="mt-2 btn-group">
+                                    @Html.ActionLink("Detalles", "Details", new { id = Cliente.Id }, new { @class = "btn btn-sm btn-outline-light" })
+                                    @Html.ActionLink("Editar", "Edit", new { id = Cliente.Id }, new { @class = "btn btn-sm btn-outline-light" })
+                                </div>
+                            </div>
+                        </div>
+                    }
+                } else
+                {
+                    <div class="alert alert-light"><i class="fa fa-exclamation-triangle"></i> Todavía no hay clientes.</div>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        <hr />
+        <div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i> No existen clientes.</div>
+    }
+</main>

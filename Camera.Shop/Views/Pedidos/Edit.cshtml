@@ -1,0 +1,39 @@
+﻿@model Camera.Shop.Models.Pedidos
+@using Camera.Shop.Models
+
+@{
+    Layout = "~/Views/Shared/_LayoutAdministrador.cshtml";
+    ViewBag.Title = "Editar el estado";
+}
+
+<main class="container my-5">
+    <h2><i class="fa fa-edit"></i> @ViewBag.Title del pedido</h2>
+    <hr />
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+    <p class="mb-0">Pedido</p>
+    <h4><span class="badge badge-dark">@Model.Id</span></h4>
+    <div class="form-horizontal">
+        <div class="form-group">
+            @Html.LabelFor(model => model.Estados_Pedido, "Estado", htmlAttributes: new { @for = "IdEstado" })
+            @Html.DropDownList("IdEstado", null, htmlAttributes: new { @class = "form-control", autofocus = "autofocus" })
+            @Html.ValidationMessageFor(model => model.Estados_Pedido, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group text-right">
+            <button type="reset" class="btn btn-danger"><i class="fa fa-eraser"></i> Limpiar</button>
+            <button type="submit" class="btn btn-dark"><i class="fa fa-save"></i> Guardar</button>
+        </div>
+    </div>
+    }
+    <hr />
+    <p>
+        <a href="javascript:window.history.go(-1);" class="text-dark"><i class="fa fa-arrow-left"></i> Volver</a>
+    </p>
+</main>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

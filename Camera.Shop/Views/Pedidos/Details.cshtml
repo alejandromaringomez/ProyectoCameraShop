@@ -1,0 +1,139 @@
+﻿@model Camera.Shop.Models.Pedidos
+@using Camera.Shop.Models
+
+@{
+    string RutaImagenes = "/Content/Images";
+    Layout = "~/Views/Shared/_Layout" + (User.IsInRole("Administrador") ? "Administrador" : "Usuario") + ".cshtml";
+    ViewBag.Title = "Pedido";
+}
+
+<main class="container-fluid my-5">
+    <p>
+        <a href="javascript:window.history.go(-1);" class="text-dark"><i class="fa fa-arrow-left"></i> Volver</a>
+    </p>
+    <hr />
+    <h3><i class="fa fa-sticky-note"></i> @ViewBag.Title</h3>
+    <div class="row my-4">
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fa fa-info-circle"></i> Información del <b>pedido</b></h5>
+                </div>
+                <div class="card-body">
+                    <dl class="mb-0">
+                        <dt>@Html.DisplayNameFor(Model => Model.Id)</dt>
+                        <dd class="h4"><span class="badge badge-dark">@Html.DisplayFor(Model => Model.Id)</span></dd>
+                        <dt>@Html.DisplayNameFor(Model => Model.Estados_Pedido)</dt>
+                        <dd class="h4"><span class="badge badge-info">@Html.DisplayFor(Model => Model.Estados_Pedido.Nombre)</span></dd>
+                        <dt>@Html.DisplayNameFor(Model => Model.Fecha_Pedido)</dt>
+                        <dd>@Html.DisplayFor(Model => Model.Fecha_Pedido)</dd>
+                        <dt>@Html.DisplayNameFor(Model => Model.Fecha_Modificacion)</dt>
+                        <dd>@Html.DisplayFor(Model => Model.Fecha_Modificacion)</dd>
+                    </dl>
+                </div>
+                @if (User.IsInRole("Administrador"))
+                {
+                    <div class="card-footer text-right">
+                        @Html.ActionLink("Editar el estado", "Edit", "Pedidos", new { id = Model.Id }, new { @class = "btn btn-dark" })
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fa fa-user"></i> Información del <b>cliente</b></h5>
+                </div>
+                <div class="card-body">
+                    <dl class="mb-0">
+                        <dt>@Html.DisplayNameFor(Model => Model.Clientes.Nombre)</dt>
+                        <dd>@Html.DisplayFor(Model => Model.Clientes.Nombre)</dd>
+                        <dt>@Html.DisplayNameFor(Model => Model.Clientes.Direccion)</dt>
+                        <dd>@Html.DisplayFor(Model => Model.Clientes.Direccion)</dd>
+                        <dt>@Html.DisplayNameFor(Model => Model.Clientes.Pais)</dt>
+                        <dd>@Html.DisplayFor(Model => Model.Clientes.Pais)</dd>
+                        <dt>@Html.DisplayNameFor(Model => Model.Clientes.Telefono)</dt>
+                        <dd>@Html.DisplayFor(Model => Model.Clientes.Telefono)</dd>
+                        <dt>@Html.DisplayNameFor(Model => Model.Clientes.Email)</dt>
+                        <dd>@Html.DisplayFor(Model => Model.Clientes.Email)</dd>
+                    </dl>
+                </div>
+                <div class="card-footer text-right">
+                    @Html.ActionLink("Detalles del cliente", "Details", "Clientes", new { id = Model.Clientes.Id }, new { @class = "btn btn-dark" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="fa fa-list"></i> Detalles del pedido</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped mb-0">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Producto</th>
+                        <th>Unidades</th>
+                        <th>Precio unitario (IVA incl.)</th>
+                        <th>Precio (IVA incl.)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        decimal TotalCompraConIVA = 0;
+                    }
+                    @foreach (Detalles_Pedido Detalle in Model.Detalles_Pedido)
+                    {
+                        <tr>
+                            <td class="text-center">
+                                @{
+                                    string RutaImagen = RutaImagenes + "/Productos/" + Detalle.Productos.Imagen;
+                                }
+                                @if (File.Exists(Server.MapPath("~" + RutaImagen)))
+                                {
+                                    <a href="@RutaImagen" title="@Detalle.Productos.Nombre" class="fancybox">
+                                        <img src="@RutaImagen" alt="@Detalle.Productos.Nombre" class="rounded border" height="75" />
+                                    </a>
+                                }
+                                else
+                                {
+                                    <img src="@RutaImagenes/no_disponible.svg" alt="Imagen no disponible" height="75" />
+                                }
+                            </td>
+                            <td>
+                                @Html.ActionLink(Detalle.Productos.Nombre, "Details", "Productos", new { id = Detalle.Productos.Id }, new { @class = "h5 font-weight-bold" })
+                                <p>
+                                    @if (Detalle.Productos.Descripcion.Count() < 110)
+                                    {
+                                        @Detalle.Productos.Descripcion;
+                                    }
+                                    else
+                                    {
+                                        @(Detalle.Productos.Descripcion.Substring(0, 110) + "...")
+                                    }
+                                </p>
+                            </td>
+                            <td>@Detalle.Unidades</td>
+                            @{
+                                decimal IVA = Detalle.Precio_Unitario * Detalle.IVA / 100;
+                                decimal PrecioUnitarioConIva = Detalle.Precio_Unitario + IVA;
+                                decimal TotalConIVA = PrecioUnitarioConIva * Detalle.Unidades;
+                                TotalCompraConIVA += TotalConIVA;
+                            }
+                            <td>@string.Format("{0:C}", PrecioUnitarioConIva)</td>
+                            <td class="h5 font-weight-bold">@string.Format("{0:C}", TotalConIVA)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="mt-4 text-right">
+        <p class="mb-0">Total a pagar (IVA incl.):</p>
+        <h2 class="font-weight-bold">@string.Format("{0:C}", TotalCompraConIVA)</h2>
+        <p class="mt-3 mb-0">
+            <a href="javascript:window.print()" class="btn btn-primary"><i class="fa fa-print"></i> Imprimir página</a>
+        </p>
+    </div>
+</main>

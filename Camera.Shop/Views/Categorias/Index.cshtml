@@ -1,0 +1,54 @@
+﻿@model PagedList.IPagedList<Camera.Shop.Models.Categorias>
+@using PagedList.Mvc;
+@using Camera.Shop.Models
+
+@{
+    Layout = "~/Views/Shared/_LayoutAdministrador.cshtml";
+    ViewBag.Title = "Categorías";
+}
+
+<main class="container my-5">
+    <h2><i class="fa fa-tags"></i> @ViewBag.Title</h2>
+    <hr />
+    <p class="text-right">
+        @Html.ActionLink("Crear", "Create", null, new { @class = "btn btn-sm btn-dark" })
+    </p>
+    @if (Model.Count<Categorias>() > 0)
+    {
+        <div class="table-responsive">
+            <table class="table">
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Productos</th>
+                    <th><i class="fa fa-cog"></i></th>
+                </tr>
+                @foreach (Categorias Categoria in Model)
+                {
+                    <tr>
+                        <td>@Categoria.Id</td>
+                        <td>@Categoria.Nombre</td>
+                        <td>@Categoria.Productos.Count()</td>
+                        <td>
+                            <div class="btn-group">
+                                @Html.ActionLink("Detalles", "Details", new { id = Categoria.Id }, new { @class = "btn btn-sm btn-outline-dark" })
+                                @Html.ActionLink("Editar", "Edit", new { id = Categoria.Id }, new { @class = "btn btn-sm btn-outline-dark" })
+                                @if (Categoria.Productos.Count() < 1)
+                                {
+                                    @Html.ActionLink("Eliminar", "Delete", new { id = Categoria.Id }, new { onclick = "return confirm('¿Está seguro que desea eliminar el cliente?')", @class = "btn btn-sm btn-outline-danger" })
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+        <p>Página @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount</p>
+        @Html.PagedListPager(Model, Page => Url.Action("Index", new { Page }), new PagedListRenderOptions { LiElementClasses = new string[] { "page-item" } })
+    }
+    else
+    {
+        <hr />
+        <div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i> No hay categorías.</div>
+    }
+</main>

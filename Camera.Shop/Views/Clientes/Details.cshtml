@@ -1,0 +1,76 @@
+﻿@model Camera.Shop.Models.Clientes
+
+@{
+    Layout = "~/Views/Shared/_Layout" + (User.IsInRole("Administrador") ? "Administrador" : "Usuario") + ".cshtml";
+    ViewBag.Title = (User.IsInRole("Administrador") ? "Detalles del cliente" : "Mis datos");
+}
+
+<main class="container my-5">
+    <h2><i class="fa fa-user"></i> @ViewBag.Title</h2>
+    <hr />
+    <dl class="dl-horizontal">
+        @if (User.IsInRole("Administrador"))
+        {
+            <dt>
+                @Html.DisplayNameFor(model => model.Id)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Id)
+            </dd>
+        }
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Fecha_Nacimineto)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Fecha_Nacimineto)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Telefono)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Telefono)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Direccion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Direccion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Pais)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Pais)
+        </dd>
+    </dl>
+    <hr />
+    <p>
+        <a href="javascript:window.history.go(-1);" class="text-dark mr-2"><i class="fa fa-arrow-left"></i> Volver</a>
+        @Html.ActionLink("Editar", "Edit", "Clientes", null, new { @class = "btn btn-dark" })
+    </p>
+</main>

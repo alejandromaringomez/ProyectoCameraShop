@@ -1,0 +1,110 @@
+﻿@model Camera.Shop.Models.Productos
+
+@{
+    Layout = "~/Views/Shared/_LayoutAdministrador.cshtml";
+    ViewBag.Title = "Editar producto";
+    string RutaImagenes = "/Content/Images";
+    string RutaImagen = RutaImagenes + "/Productos/" + Model.Imagen;
+}
+
+<main class="container my-5">
+    <h2><i class="fa fa-shopping-cart"></i> @ViewBag.Title</h2>
+    <hr />
+    @if (Model.Imagen != null)
+    {
+        using (Html.BeginForm("EliminarImagen", "Productos"))
+        {
+            @Html.HiddenFor(Model => Model.Id)
+            <a href="@RutaImagen" title="@Model.Nombre" class="fancybox mt-4">
+                <img src="@RutaImagen" alt="@Model.Nombre" style="max-height: 200px;" class="d-block mx-auto border rounded mb-3" />
+            </a>
+            <div class="text-center mt-3 mb-4">
+                <button type="submit" onclick="return confirm('¿Está seguro que desea eliminar la imagen del producto?')" class="btn btn-danger"><i class="fa fa-trash"></i> Eliminar la imagen</button>
+            </div>
+        }
+        <hr />
+    }
+    @using (Html.BeginForm("Edit", "Productos", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.Id)
+            @if (Model.Imagen != null)
+            {
+                @Html.HiddenFor(Model => Model.Imagen)
+            }
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control", autofocus = "autofocus" } })
+                        @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+                    </div>
+                    @if (Model.Imagen == null)
+                    {
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Imagen, htmlAttributes: new { @class = "control-label" })
+                            @Html.TextBoxFor(model => model.Imagen, new { type = "file", accept = "image/*" })
+                            @Html.ValidationMessageFor(model => model.Imagen, "", new { @class = "d-block text-danger" })
+                        </div>
+                    }
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Descripcion, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.Descripcion, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Id_Categoria, "Categoría", htmlAttributes: new { @for = "Id_Categoria", @class = "control-label" })
+                        @Html.DropDownList("Id_Categoria", null, htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Id_Categoria, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Catalogo, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.Catalogo, new { htmlAttributes = new { type = "number", step = 1, @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Catalogo, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Precio_Unitario, htmlAttributes: new { @class = "control-label" })
+                        <div class="input-group">
+                            @Html.EditorFor(model => model.Precio_Unitario, new { htmlAttributes = new { @class = "form-control" } })
+                            <div class="input-group-append">
+                                <div class="input-group-text">&euro;</div>
+                            </div>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Precio_Unitario, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.IVA, htmlAttributes: new { @class = "control-label" })
+                        <div class="input-group">
+                            @Html.EditorFor(model => model.IVA, new { htmlAttributes = new { @class = "form-control" } })
+                            <div class="input-group-append">
+                                <div class="input-group-text">%</div>
+                            </div>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.IVA, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.EditorFor(model => model.Escaparate)
+                        @Html.LabelFor(model => model.Escaparate, htmlAttributes: new { @class = "control-label" })
+                        @Html.ValidationMessageFor(model => model.Escaparate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group text-right">
+                <button type="reset" class="btn btn-danger"><i class="fa fa-eraser"></i> Limpiar</button>
+                <button type="submit" class="btn btn-dark"><i class="fa fa-save"></i> Guardar</button>
+            </div>
+        </div>
+    }
+    <hr />
+    <p>
+        <a href="javascript:window.history.go(-1);" class="text-dark"><i class="fa fa-arrow-left"></i> Volver</a>
+    </p>
+</main>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

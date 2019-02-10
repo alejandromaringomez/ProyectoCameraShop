@@ -1,0 +1,35 @@
+﻿@model Camera.Shop.Models.Categorias
+
+@{
+    Layout = "~/Views/Shared/_LayoutAdministrador.cshtml";
+    ViewBag.Title = "Detalles";
+}
+
+<main class="container my-5">
+    <h2><i class="fa fa-tag"></i> @ViewBag.Title</h2>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Productos)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Productos.Count)
+        </dd>
+    </dl>
+    <hr />
+    <p>
+        <a href="javascript:window.history.go(-1);" class="text-dark"><i class="fa fa-arrow-left"></i> Volver</a>
+    </p>
+</main>

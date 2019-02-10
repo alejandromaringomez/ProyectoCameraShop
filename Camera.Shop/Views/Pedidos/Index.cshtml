@@ -1,0 +1,77 @@
+﻿@model PagedList.IPagedList<Camera.Shop.Models.Pedidos>
+@using PagedList.Mvc;
+@using Camera.Shop.Models
+@{
+    Layout = "~/Views/Shared/_Layout" + (User.IsInRole("Administrador") ? "Administrador" : "Usuario") + ".cshtml";
+    ViewBag.Title = (User.IsInRole("Administrador") ? "Pedidos" : "Mis pedidos");
+    IEnumerable<SelectListItem> EstadosPedidos = ViewBag.EstadosPedidos;
+}
+
+<main class="container-fluid my-5">
+    <h3 class="mb-4"><i class="fa fa-sticky-note"></i> @ViewBag.Title</h3>
+    <hr />
+    @using (Html.BeginForm("Index", "Pedidos", FormMethod.Get, new { @class = "form-inline" }))
+    {
+        <div class="form-group ml-auto">
+            @Html.Label("Filtrar por estado del pedido:", new { @for = "Estado", @class = "control-label mr-2" })
+            @Html.DropDownList("Estado", EstadosPedidos, new { @class = "form-control w-auto", onchange = "this.form.submit();" })
+        </div>
+    }
+    @if (Model.Count() > 0)
+    {
+        <div class="mt-3 table-responsive">
+            <table class="table">
+                <tr>
+                    <th>ID</th>
+                    <th>Estado</th>
+                    @if (User.IsInRole("Administrador"))
+                    {
+                        <th>Nombre</th>
+                        <th>País</th>
+                    }
+                    <th>Fecha del pedido</th>
+                    <th>Fecha de la modificación</th>
+                    <th>Detalles del pedido</th>
+                    <th>Total</th>
+                    <th><i class="fa fa-cog"></i></th>
+                </tr>
+                @foreach (Pedidos Pedido in Model)
+                {
+                    decimal TotalPedido = Pedido.Detalles_Pedido.Sum(e => (e.Precio_Unitario + (e.Precio_Unitario * e.IVA / 100)) * e.Unidades);
+                    <tr>
+                        <td>@Pedido.Id</td>
+                        <td>
+                            @Html.ActionLink(Pedido.Estados_Pedido.Nombre, "Index", "Pedidos", new { Estado = Pedido.Estados_Pedido.Id }, new { @class = "badge badge-secondary" })
+                        </td>
+                        @if (User.IsInRole("Administrador"))
+                        {
+                            <td>@Html.ActionLink(Pedido.Clientes.Nombre, "Details", "Clientes", new { id = Pedido.Clientes.Id }, null)</td>
+                            <td>@Pedido.Clientes.Pais</td>
+                        }
+                        <td>@Pedido.Fecha_Pedido</td>
+                        <td>@Pedido.Fecha_Modificacion</td>
+                        <td>@Pedido.Detalles_Pedido.Count()</td>
+                        <td>@string.Format("{0:C}", TotalPedido)</td>
+                        <td>
+                            <div class="btn-group">
+                                @Html.ActionLink("Detalles", "Details", new { id = Pedido.Id }, new { @class = "btn btn-outline-dark btn-sm" })
+                                @if (User.IsInRole("Administrador"))
+                                {
+                                    @Html.ActionLink("Editar el estado", "Edit", new { id = Pedido.Id }, new { @class = "btn btn-outline-dark btn-sm" })
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+        <hr />
+        <p>Página @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount</p>
+        @Html.PagedListPager(Model, Page => Url.Action("Index", new { Page, Estado = Convert.ToString(ViewBag.EstadoSeleccionadoFiltro.Value) }), new PagedListRenderOptions { LiElementClasses = new string[] { "page-item" } })
+    }
+    else
+    {
+        <hr />
+        <div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i> @(User.IsInRole("Administrador") ? "No hay pedidos todavía." : "No ha realizado pedidos todavía.")</div>
+    }
+</main>

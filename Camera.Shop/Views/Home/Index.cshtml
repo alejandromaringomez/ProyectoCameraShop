@@ -1,0 +1,130 @@
+﻿@using Camera.Shop.Models
+
+@{
+    string RutaImagenes = "/Content/Images";
+    string RutaImagenesProductos = RutaImagenes + "/Productos";
+    if (User.Identity.IsAuthenticated)
+    {
+        if (User.IsInRole("Administrador"))
+        {
+            Layout = "~/Views/Shared/_LayoutAdministrador.cshtml";
+        }
+        else
+        {
+            Layout = "~/Views/Shared/_LayoutUsuario.cshtml";
+        }
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    ViewBag.Title = "Inicio";
+}
+
+<section id="CabeceraGigante" class="jumbotron text-center">
+    <!-- Controlar el margen con media querys -->
+    <div class="container">
+        <h1 class="jumbotron-heading text-white text-pacifico">Todos los productos que necesitas</h1>
+        <p class="lead text-white">En nuestra tienda online podrás encontrar multitud de productos, todos ellos relacionados con el mundo de la fotografía, los últimos modelos de cámaras Nikon, Canon... A continuación te mostramos nuestro escaparate y los productos más vendidos:</p>
+        <p>
+            <a href="@Url.Action("Index", "Productos")" class="btn btn-outline-light btn-lg my-2">Ver los productos por categorías</a>
+        </p>
+    </div>
+</section>
+<main id="home" class="container-fluid">
+    <div class="row animated fadeInDown">
+        <div class="col col-lg-8">
+            <div class="rounded shadow-lg border bg-white">
+                <h3 class="m-4"><i class="fa fa-shopping-cart"></i> Todos nuestros productos</h3>
+                <hr>
+                <div class="row m-5">
+                    <div id="CarouselProductosEscaparate" class="owl-carousel owl-theme">
+                        @foreach (Productos Producto in ViewBag.ProductosEscaparate)
+                        {
+                            <div class="item">
+                                <div class="card Producto">
+                                    @{
+                                        string RutaImagen = RutaImagenesProductos + '/' + Producto.Imagen;
+                                    }
+                                    @if (File.Exists(Server.MapPath("~" + RutaImagen)))
+                                    {
+                                        <a href="@RutaImagen" title="@Producto.Nombre" class="Imagen fancybox" style="background-image: url(@RutaImagen);"></a>
+                                    }
+                                    else
+                                    {
+                                        <div class="Imagen" style="background-image: url(@RutaImagenes/no_disponible.svg);"></div>
+                                    }
+                                    <div class="card-body">
+                                        <h4 class="Titulo mb-2">@Html.ActionLink(Producto.Nombre, "Details", "Productos", new { Id = Producto.Id }, null)</h4>
+                                        <p class="Descripcion">@Producto.Descripcion</p>
+                                        <h2>@(string.Format("{0:C}", Producto.Precio_Unitario + (Producto.Precio_Unitario * Producto.IVA / 100))) <span class="text-muted h6">/ (IVA incl.)</span></h2>
+                                    </div>
+                                    <div class="card-footer text-right">
+                                        <div class="btn-group">
+                                            @Html.ActionLink("Detalles", "Details", "Productos", new { id = Producto.Id }, new { @class = "btn btn-sm btn-outline-dark" })
+                                            @if (User.Identity.IsAuthenticated && User.IsInRole("Administrador"))
+                                            {
+                                                @Html.ActionLink("Editar", "Edit", "Productos", new { Id = Producto.Id }, new { @class = "btn btn-sm btn-outline-dark" })
+                                                if (Producto.Detalles_Pedido.Count() < 1)
+                                                {
+                                                    @Html.ActionLink("Eliminar", "Delete", "Productos", new { id = Producto.Id }, new { onclick = "return confirm('¿Seguro que desea eliminar el producto?')", @class = "btn btn-sm btn-outline-danger" })
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <hr>
+                <div class="m-4">
+                    <a href="@Url.Action("Index", "Productos")" class="btn btn-lg w-100 btn-primary p-3 shadow">Ver todos los productos <i class="fa fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="col mt-3 mt-lg-0 col-lg-4">
+            <div class="rounded shadow-lg border bg-white">
+                <h3 class="m-4"><i class="fa fa-star"></i> <b>Top 4</b> productos más vendidos</h3>
+                <hr>
+                @{ 
+                    List<Productos> RankingProductos = ViewBag.RankingProductosVendidos;
+                }
+                @for (int i = 0; i < RankingProductos.Count(); i++) {
+                    Productos Producto = RankingProductos[i];
+                    Producto.Imagen = RutaImagenesProductos + '/' + Producto.Imagen;
+                    <div class="row bg-info p-3 m-3 rounded">
+                        <div class="col-4">
+                            @if (File.Exists(Server.MapPath("~" + Producto.Imagen)))
+                            {
+                                <a href="@Producto.Imagen" title="@Producto.Nombre" class="fancybox">
+                                    <img src="@Producto.Imagen" alt="@Producto.Nombre" class="img-fluid rounded">
+                                </a>
+                            }
+                            else
+                            {
+                                <img src="@RutaImagenes/no_disponible.svg" alt="Imagen no disponible" class="img-fluid rounded">
+                            }
+                        </div>
+                        <div class="col-8">
+                            <p class="badge badge-light mb-0">Posición #@(i + 1)</p>
+                            <h3 class="mb-0">@Html.ActionLink(Producto.Nombre, "Details", "Productos", new { Id = Producto.Id }, new { @class = "text-white" })</h3>
+                            <h5 class="text-white">@Producto.Detalles_Pedido.Sum(e => e.Unidades) ventas</h5>
+                            <div class="mt-2 btn-group">
+                                @Html.ActionLink("Detalles", "Details", "Productos", new { id = Producto.Id }, new { @class = "btn btn-sm btn-outline-light" })
+                                @if (User.Identity.IsAuthenticated && User.IsInRole("Administrador"))
+                                {
+                                    @Html.ActionLink("Editar", "Edit", "Productos", new { Id = Producto.Id }, new { @class = "btn btn-sm btn-outline-light" })
+                                    if (Producto.Detalles_Pedido.Count() < 1)
+                                    {
+                                        @Html.ActionLink("Eliminar", "Delete", "Productos", new { id = Producto.Id }, new { onclick = "return confirm('¿Seguro que desea eliminar el producto?')", @class = "btn btn-sm btn-outline-light" })
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+               }
+            </div>
+        </div>
+    </div>
+</main>
