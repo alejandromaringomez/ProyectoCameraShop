@@ -44,9 +44,9 @@
             </div>
         </div>
         <div class="col-12 mt-4 mt-md-0 col-md-8 col-xl-10">
-            <div class="row bg-light rounded p-3 mb-4">
-                <h4 class="mb-0 col-7"><i class="fa fa-tag"></i> @CategoriaActual.Nombre</h4>
-                <div class="col-5">
+            <div class="row bg-light rounded p-3 mx-0 mb-4">
+                <h4 class="mb-0 col-7 px-0"><i class="fa fa-tag"></i> @CategoriaActual.Nombre</h4>
+                <div class="col-5 px-0">
                     @using (Html.BeginForm("Index", "Productos", null, FormMethod.Get, new { @class = "form-inline" }))
                     {
                         @Html.Hidden("IdCategoria", CategoriaActual.Id)
