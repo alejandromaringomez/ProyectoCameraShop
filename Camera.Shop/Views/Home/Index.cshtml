@@ -84,7 +84,7 @@
             </div>
         </div>
         <div class="col mt-3 mt-lg-0 col-lg-4">
-            <div class="rounded shadow-lg border bg-white">
+            <div id="RankingVendidos" class="rounded shadow-lg border bg-white">
                 <h3 class="m-4"><i class="fa fa-star"></i> <b>Top 4</b> productos más vendidos</h3>
                 <hr>
                 @{ 
@@ -94,18 +94,14 @@
                     Productos Producto = RankingProductos[i];
                     Producto.Imagen = RutaImagenesProductos + '/' + Producto.Imagen;
                     <div class="row bg-info p-3 m-3 rounded">
-                        <div class="col-4">
-                            @if (File.Exists(Server.MapPath("~" + Producto.Imagen)))
-                            {
-                                <a href="@Producto.Imagen" title="@Producto.Nombre" class="fancybox">
-                                    <img src="@Producto.Imagen" alt="@Producto.Nombre" class="img-fluid rounded">
-                                </a>
-                            }
-                            else
-                            {
-                                <img src="@RutaImagenes/no_disponible.svg" alt="Imagen no disponible" class="img-fluid rounded">
-                            }
-                        </div>
+                        @if (File.Exists(Server.MapPath("~" + Producto.Imagen)))
+                        {
+                            <a href="@Producto.Imagen" title="@Producto.Nombre" class="col-4 fancybox Imagen rounded" style="background-image: url(@Producto.Imagen);"></a>
+                        }
+                        else
+                        {
+                            <div class="col-4 rounded" style="background-image: url(@RutaImagenes/no_disponible.svg);"></div>
+                        }
                         <div class="col-8">
                             <p class="badge badge-light mb-0">Posición #@(i + 1)</p>
                             <h3 class="mb-0">@Html.ActionLink(Producto.Nombre, "Details", "Productos", new { Id = Producto.Id }, new { @class = "text-white" })</h3>

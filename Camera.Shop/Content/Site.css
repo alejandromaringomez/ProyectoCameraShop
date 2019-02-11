@@ -42,6 +42,14 @@ main#home {
     height: 75px;
 }
 
+#RankingVendidos .Imagen {
+    background-image: url(/Content/Images/no_disponible.svg);
+    background-size: 95%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #fff;
+}
+
 /* Edicion de la imagen del producto */
 
 #EditarImagenProducto img {
