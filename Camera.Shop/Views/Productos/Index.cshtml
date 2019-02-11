@@ -45,16 +45,16 @@
         </div>
         <div class="col-12 mt-4 mt-md-0 col-md-8 col-xl-10">
             <div class="row bg-light rounded p-3 mx-0 mb-4">
-                <h4 class="mb-0 col-7 px-0"><i class="fa fa-tag"></i> @CategoriaActual.Nombre</h4>
-                <div class="col-5 px-0">
+                <h4 class="col-12 col-md-7 mb-0 px-0"><i class="fa fa-tag"></i> @CategoriaActual.Nombre</h4>
+                <div class="col-12 col-md-5 px-0">
                     @using (Html.BeginForm("Index", "Productos", null, FormMethod.Get, new { @class = "form-inline" }))
                     {
                         @Html.Hidden("IdCategoria", CategoriaActual.Id)
                         @Html.Hidden("Page", Model.PageNumber)
-                        <div class="form-group ml-auto">
+                        <div class="form-group my-2 my-md-0 ml-md-auto">
                             @Html.Label("Búsqueda:", new { @for = "Busqueda" })
-                            @Html.TextBox("Busqueda", null, new { @class = "form-control mx-2" })
-                            <button type="submit" class="btn btn-dark"><i class="fa fa-search"></i> Buscar</button>
+                            @Html.TextBox("Busqueda", null, new { @class = "form-control mx-md-2" })
+                            <button type="submit" class="btn btn-dark mt-2 mt-md-0"><i class="fa fa-search"></i> Buscar</button>
                         </div>
                     }
                 </div>
