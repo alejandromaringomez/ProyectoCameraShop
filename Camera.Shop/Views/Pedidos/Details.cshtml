@@ -8,10 +8,12 @@
 }
 
 <main class="container-fluid my-5">
-    <p>
-        <a href="javascript:window.history.go(-1);" class="text-dark"><i class="fa fa-arrow-left"></i> Volver</a>
-    </p>
-    <hr />
+    <div class="d-print-none">
+        <p>
+            <a href="javascript:window.history.go(-1);" class="text-dark"><i class="fa fa-arrow-left"></i> Volver</a>
+        </p>
+        <hr />
+    </div>
     <h3><i class="fa fa-sticky-note"></i> @ViewBag.Title</h3>
     <div class="row my-4">
         <div class="col-12 col-md-6">
@@ -39,7 +41,7 @@
                 }
             </div>
         </div>
-        <div class="col-12 col-md-6">
+        <div class="col-12 mt-3 mt-md-0 col-md-6">
             <div class="card">
                 <div class="card-header">
                     <h5 class="mb-0"><i class="fa fa-user"></i> Información del <b>cliente</b></h5>
