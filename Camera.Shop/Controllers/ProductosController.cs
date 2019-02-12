@@ -86,10 +86,13 @@ namespace Camera.Shop.Controllers
             {
                 db.Productos.Add(Producto);
                 db.SaveChanges();
-                Producto.Imagen = Producto.Id + Path.GetExtension(Imagen.FileName);
-                db.Entry(Producto).State = EntityState.Modified;
-                db.SaveChanges();
-                Imagen.SaveAs(Server.MapPath("~" + RutaImagenesProductos + Producto.Imagen));
+                if(Imagen != null)
+                {
+                    Producto.Imagen = Producto.Id + Path.GetExtension(Imagen.FileName);
+                    db.Entry(Producto).State = EntityState.Modified;
+                    db.SaveChanges();
+                    Imagen.SaveAs(Server.MapPath("~" + RutaImagenesProductos + Producto.Imagen));
+                }
                 return RedirectToAction("Index");
             } else
             {
@@ -150,11 +153,14 @@ namespace Camera.Shop.Controllers
             {
                 if(Producto.Detalles_Pedido.Count() < 1)
                 {
-                    DirectoryInfo Directorio = new DirectoryInfo(Server.MapPath("~" + RutaImagenesProductos));
-                    FileInfo[] Imagenes = Directorio.GetFiles(Producto.Imagen);
-                    if(Imagenes.Count() > 0)
+                    if(!string.IsNullOrEmpty(Producto.Imagen))
                     {
-                        Imagenes[0].Delete();
+                        DirectoryInfo Directorio = new DirectoryInfo(Server.MapPath("~" + RutaImagenesProductos));
+                        FileInfo[] Imagenes = Directorio.GetFiles(Producto.Imagen);
+                        if (Imagenes.Count() > 0)
+                        {
+                            Imagenes[0].Delete();
+                        }
                     }
                     db.Productos.Remove(Producto);
                     db.SaveChanges();
