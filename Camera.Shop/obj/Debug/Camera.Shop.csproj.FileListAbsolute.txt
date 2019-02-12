@@ -1235,3 +1235,4 @@ C:\Users\marin16497\Desktop\ProyectoCameraShop\Camera.Shop\obj\Debug\Camera.Shop
 C:\Users\marin16497\Desktop\ProyectoCameraShop\Camera.Shop\obj\Debug\Camera.Shop.dll
 C:\Users\marin16497\Desktop\ProyectoCameraShop\Camera.Shop\obj\Debug\Camera.Shop.pdb
 C:\Users\marin16497\Desktop\ProyectoCameraShop\Camera.Shop\obj\Debug\Camera.Shop.csprojAssemblyReference.cache
+D:\usuarios\alejandro\Escritorio\ProyectoCameraShop\Camera.Shop\obj\Debug\Camera.Shop.csprojAssemblyReference.cache
