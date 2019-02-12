@@ -35,7 +35,7 @@
                 </div>
                 @if (User.IsInRole("Administrador"))
                 {
-                    <div class="card-footer text-right">
+                    <div class="card-footer text-right d-print-none">
                         @Html.ActionLink("Editar el estado", "Edit", "Pedidos", new { id = Model.Id }, new { @class = "btn btn-dark" })
                     </div>
                 }
@@ -60,7 +60,7 @@
                         <dd>@Html.DisplayFor(Model => Model.Clientes.Email)</dd>
                     </dl>
                 </div>
-                <div class="card-footer text-right">
+                <div class="card-footer text-right d-print-none">
                     @Html.ActionLink("Detalles del cliente", "Details", "Clientes", new { id = Model.Clientes.Id }, new { @class = "btn btn-dark" })
                 </div>
             </div>
@@ -135,7 +135,7 @@
         <p class="mb-0">Total a pagar (IVA incl.):</p>
         <h2 class="font-weight-bold">@string.Format("{0:C}", TotalCompraConIVA)</h2>
         <p class="mt-3 mb-0">
-            <a href="javascript:window.print()" class="btn btn-primary"><i class="fa fa-print"></i> Imprimir página</a>
+            <a href="javascript:window.print()" class="btn btn-primary d-print-none"><i class="fa fa-print"></i> Imprimir página</a>
         </p>
     </div>
 </main>
