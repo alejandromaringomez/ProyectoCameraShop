@@ -14,11 +14,58 @@
     {
         Layout = "~/Views/Shared/_Layout.cshtml";
     }
-    ViewBag.Title = "Quienes somos";
+    ViewBag.Title = "Quiénes somos";
 }
 
 <main class="container my-5">
     <h2><i class="fa fa-users"></i> @ViewBag.Title</h2>
     <hr />
-    <p>Use this area to provide additional information.</p>
+    <div class="row my-5">
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card m-3 border-0">
+                <div class="card-img pb-3 text-center">
+                    <i class="fa fa-recycle fa-4x"></i>
+                </div>
+                <div class="card-box">
+                    <h4 class="card-title py-2 display-5 text-center">Renovación</h4>
+                    <p class="text-center">Contamos con lo último en material fotográfico para nuestros clientes. Tenemos cámaras, objetivos y un largo etc ...</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card m-3 border-0">
+                <div class="card-img pb-3 text-center">
+                    <i class="fa fa-globe fa-4x"></i>
+                </div>
+                <div class="card-box">
+                    <h4 class="card-title py-2 display-5 text-center">Envíos a todo el mundo</h4>
+                    <p class="text-center">En la actualidad ventemos a todo el mundo, te enviamos los productos allá donde estés.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card m-3 border-0">
+                <div class="card-img pb-3 text-center">
+                    <i class="fa fa-wrench fa-4x"></i>
+                </div>
+                <div class="card-box">
+                    <h4 class="card-title py-2 display-5 text-center">Servicio post-venta</h4>
+                    <p class="text-center">Disponemos de uno de los mejores servicios post-venta en el sector. Esto te añade un plus en la garantía de tus productos.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h5><i class="fa fa-vcard"></i> Nuestro equipo:</h5>
+    <hr />
+    <div class="row">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-0 shadow">
+                <img src="~/Content/Images/Equipo/alejandro_marin.jpg" class="card-img-top" alt="Alejandro Marín">
+                <div class="card-body text-center">
+                    <h5 class="card-title mb-0">Alejandro Marín</h5>
+                    <div class="card-text text-black-50">Desarrollador web</div>
+                </div>
+            </div>
+        </div>
+    </div>
 </main>
