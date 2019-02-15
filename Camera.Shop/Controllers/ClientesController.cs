@@ -30,7 +30,7 @@ namespace Camera.Shop.Controllers
                 Page = 1;
             }
             IEnumerable<Clientes> Clientes = db.Clientes;
-            IEnumerable<ClienteRanking> RankingClientesGasto = Clientes.Select(x => new ClienteRanking { Id =  x.Id, Nombre = x.Nombre, Gastado = x.Pedidos.Where(c => c.Id_Estado != 1).Sum(a => a.Detalles_Pedido.Sum(b => ((b.Precio_Unitario * b.IVA / 100) + b.Precio_Unitario) * b.Unidades)) }).OrderByDescending(z => z.Gastado).Take(5);
+            IEnumerable<ClienteRanking> RankingClientesGasto = Clientes.Select(x => new ClienteRanking { Id =  x.Id, Nombre = x.Nombre, Gastado = x.Pedidos.Where(c => c.Id_Estado != 1).Sum(a => a.Detalles_Pedido.Sum(b => ((b.Precio_Unitario * b.IVA / 100) + b.Precio_Unitario) * b.Unidades)) }).OrderByDescending(z => z.Gastado).Take(4);
             ViewBag.RankingClientesGasto = RankingClientesGasto.ToList();
             return View(Clientes.OrderByDescending(e => e.Id).ToPagedList((int)Page, ClientesPorPagina));
         }
