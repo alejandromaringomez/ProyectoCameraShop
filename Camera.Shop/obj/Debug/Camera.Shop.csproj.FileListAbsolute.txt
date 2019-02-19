@@ -1231,7 +1231,6 @@ C:\Users\marin16497\Desktop\ProyectoCameraShop\Camera.Shop\bin\es\EntityFramewor
 C:\Users\marin16497\Desktop\ProyectoCameraShop\Camera.Shop\bin\es\Microsoft.AspNet.Identity.Core.resources.dll
 C:\Users\marin16497\Desktop\ProyectoCameraShop\Camera.Shop\bin\es\Microsoft.AspNet.Identity.Owin.resources.dll
 C:\Users\marin16497\Desktop\ProyectoCameraShop\Camera.Shop\bin\es\Microsoft.AspNet.Identity.EntityFramework.resources.dll
-C:\Users\marin16497\Desktop\ProyectoCameraShop\Camera.Shop\obj\Debug\Camera.Shop.csprojAssemblyReference.cache
 C:\Users\marin16497\Desktop\ProyectoCameraShop\Camera.Shop\obj\Debug\Camera.Shop.csproj.CoreCompileInputs.cache
 C:\Users\marin16497\Desktop\ProyectoCameraShop\Camera.Shop\obj\Debug\Camera.Shop.csproj.CopyComplete
 C:\Users\marin16497\Desktop\ProyectoCameraShop\Camera.Shop\obj\Debug\Camera.Shop.dll
