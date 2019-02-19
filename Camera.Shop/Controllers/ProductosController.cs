@@ -21,7 +21,7 @@ namespace Camera.Shop.Controllers
         // GET: Productos
         public ActionResult Index(int? IdCategoria, string Busqueda, int? Page)
         {
-            const int ProductosPorPagina = 10;
+            const int ProductosPorPagina = 12;
             if(Page == null)
             {
                 Page = 1;
