@@ -1,5 +1,4 @@
 ﻿@model Camera.Shop.Models.Productos
-@using Camera.Shop.Models
 
 @{
     string RutaVistas = "~/Views/Shared";
@@ -96,7 +95,7 @@
                 }
                 else
                 {
-                    <div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-triangle"></i> Para añadir un producto a su carrito debe @Html.ActionLink("registrarse", "Register", "Account") o @Html.ActionLink("iniciar sesión", "Login", "Account").</div>
+                    <div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-triangle"></i> Para añadir un producto a su carrito debe @Html.ActionLink("registrarse", "Register", "Account") o @Html.ActionLink("iniciar sesión", "Login", "Account", new { returnUrl = Request.RawUrl }, null).</div>
                 }
             </div>
         </div>
